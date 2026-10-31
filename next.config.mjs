@@ -1,4 +1,11 @@
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+const BACKEND_URL = (process.env.BACKEND_URL || "http://localhost:5000").replace(/\/+$/, "");
+
+// Fail the Vercel build loudly instead of shipping a site whose API calls silently go to localhost.
+if (process.env.VERCEL && !process.env.BACKEND_URL) {
+  throw new Error(
+    "BACKEND_URL is not set. In Vercel: Project > Settings > Environment Variables > BACKEND_URL = https://<your-backend>.vercel.app, then redeploy."
+  );
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
